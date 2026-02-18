@@ -1,0 +1,52 @@
+# Aerial Building Footprint Segmentation Configuration
+
+data:
+  data_dir: data/mass_buildings
+  train_dir: data/mass_buildings/train
+  valid_dir: data/mass_buildings/valid
+  test_dir: data/mass_buildings/test
+  image_size: 1500
+  crop_size: 512
+  num_classes: 1
+
+model:
+  architecture: unetplusplus
+  encoder: efficientnet-b4
+  encoder_weights: imagenet
+  in_channels: 3
+
+loss:
+  bce_weight: 0.5
+  dice_weight: 0.3
+  boundary_weight: 0.2
+  boundary_dilation: 3
+
+training:
+  batch_size: 8
+  epochs: 100
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  scheduler: cosine
+  warmup_epochs: 5
+  amp: true
+  gradient_clip: 1.0
+  seed: 42
+  num_workers: 4
+
+augmentation:
+  horizontal_flip: true
+  vertical_flip: true
+  random_rotate: true
+  rotate_limit: 30
+  brightness_contrast: true
+  elastic_transform: false
+
+inference:
+  tile_size: 512
+  overlap: 256
+  tta: true
+  tta_transforms: 8  # 4 rotations x 2 flips
+
+output:
+  checkpoint_dir: checkpoints
+  results_dir: results
